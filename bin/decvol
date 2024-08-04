@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Decrease volume by 5%
+pulsemixer --change-volume -5
