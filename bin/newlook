@@ -1,0 +1,39 @@
+#!/bin/bash
+
+WALLPAPER_DIR=~/Pictures/wallpapers
+CHOSEN_FILE=~/.chosen_wallpapers
+
+# Create the chosen wallpapers file if it doesn't exist
+touch "$CHOSEN_FILE"
+
+# Get all wallpapers
+all_wallpapers=$(find "$WALLPAPER_DIR" -type f -name "*.jpg" -o -name "*.png")
+
+# Get all chosen wallpapers
+chosen_wallpapers=$(cat "$CHOSEN_FILE")
+
+# Find wallpapers that haven't been chosen yet
+available_wallpapers=$(comm -23 <(echo "$all_wallpapers" | sort) <(echo "$chosen_wallpapers" | sort))
+
+# If no wallpapers are available, reset the chosen list
+if [ -z "$available_wallpapers" ]; then
+  echo "All wallpapers have been chosen, resetting the list."
+  > "$CHOSEN_FILE"
+  available_wallpapers=$all_wallpapers
+fi
+
+# Choose a random wallpaper from the available ones
+wall=$(echo "$available_wallpapers" | shuf -n 1)
+
+# Add the chosen wallpaper to the chosen list
+echo "$wall" >> "$CHOSEN_FILE"
+
+# Set the wallpaper as background
+xwallpaper --zoom "$wall"
+
+# Generate color scheme
+wal -c
+wal -i "$wall"
+
+# Refresh the screen (if needed)
+xdotool key Alt+F5

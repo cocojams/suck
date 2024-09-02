@@ -1,0 +1,7 @@
+#!/bin/bash
+# Source the user's .xinitrc if it exists
+[ -f ~/.xinitrc ] && source ~/.xinitrc
+
+# Start dwm
+exec dwm
+
